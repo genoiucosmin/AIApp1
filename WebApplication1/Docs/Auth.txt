@@ -1,0 +1,4 @@
+Authentication is handled using JWT tokens.
+Clients authenticate by sending credentials to the /login endpoint.
+A successful login returns an access token.
+The access token must be sent in the Authorization header as Bearer token.

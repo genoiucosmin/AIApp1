@@ -1,0 +1,2 @@
+This project is a demo AI assistant built in .NET.
+It answers questions using local documents.

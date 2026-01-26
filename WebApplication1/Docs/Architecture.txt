@@ -1,0 +1,3 @@
+This is a .NET 8 Web API.
+The project exposes an endpoint /ask which allows users to query documents.
+The AI assistant answers only using the provided documents.
