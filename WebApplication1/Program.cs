@@ -15,6 +15,7 @@ builder.Services.AddSingleton<IDocumentService, DocumentService>();
 builder.Services.AddHttpClient<IOpenAiClient, OpenAiClient>();
 builder.Services.AddScoped<AiService>();
 
+builder.Services.AddSingleton<ChunkSelector>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

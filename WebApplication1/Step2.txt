@@ -1,0 +1,25 @@
+﻿What is new in this version:
+	Next small step: Chunking + relevance filtering (RAG-lite)
+	What we’re adding (conceptually)
+		Previously:
+			We send all documents to the LLM ❌
+		Next step:
+			Split docs into chunks
+			Pick only relevant chunks based on the question (we count how many words from the question appear in each chunk, order by descending number)
+			Send only those to the LLM ✅
+
+This is exactly how real RAG systems start. A RAG (Retrieval-Augmented Generation) system is an AI framework that enhances Large Language Models (LLMs) by connecting them to external knowledge bases, allowing them to retrieve relevant, up-to-date, or domain-specific information before generating an answer, leading to more factual, context-aware, and less hallucinatory responses than purely generative models.
+
+------------------------
+What this contains:
+  - LLM
+  - Prompting
+  - Guarding
+
+  LLM Integration is:
+   - call OpenAI from .Net
+Prompt Engineering is:
+- defined a system prompt to constrain the model's behavior
+Grounding is
+- forced the model to answer only from provided documents
+- verified it fails gracefully when info is missing.
