@@ -1,4 +1,6 @@
-﻿What is new in this version:
+﻿
+-------------------
+What is new in this version:
 	Next small step: Chunking + relevance filtering (RAG-lite)
 	What we’re adding (conceptually)
 		Previously:

@@ -13,6 +13,9 @@ builder.Services.AddSwaggerGen();
 // Register application services before building the app
 builder.Services.AddSingleton<IDocumentService, DocumentService>();
 builder.Services.AddHttpClient<IOpenAiClient, OpenAiClient>();
+builder.Services.AddHttpClient<IEmbeddingClient, OpenAiEmbeddingClient>();
+builder.Services.AddSingleton<EmbeddingIndex>();
+
 builder.Services.AddScoped<AiService>();
 
 builder.Services.AddSingleton<ChunkSelector>();

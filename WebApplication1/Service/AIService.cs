@@ -4,32 +4,32 @@ namespace WebApplication1.Service
 {
     public class AiService
     {
-        private readonly IDocumentService _docs;
+        private readonly EmbeddingIndex _index;
         private readonly IOpenAiClient _ai;
-        private readonly ChunkSelector _selector;
 
-        public AiService(IDocumentService docs, IOpenAiClient ai, ChunkSelector selector)
+        public AiService(EmbeddingIndex index, IOpenAiClient ai)
         {
-            _docs = docs;
+            _index = index;
             _ai = ai;
-            _selector = selector;
         }
 
-        public Task<string> Ask(string question)
+        public async Task<string> Ask(string question)
         {
-            //var context = _docs.LoadAll();
-            var chunks = _docs.LoadChunks();
-            var relevant = _selector.SelectRelevant(chunks, question);
+            var relevant = await _index.SearchAsync(question);
 
-            var context = string.Join("\n\n", relevant.Select(c => $"Source : {c.Source}\n{c.Content}"));
+            var context = string.Join(
+                "\n\n",
+                relevant.Select(c =>
+                    $"Source: {c.Source}\n{c.Content}"));
 
             var systemPrompt =
-                "You are an assistant that answers ONLY using the provided documents.\n" +
+                "You are an assistant that answers ONLY using the provided context.\n" +
                 "If the answer is not present, say you don't know.\n\n" +
                 "Context:\n" + context;
 
-            return _ai.AskAsync(systemPrompt, question);
+            return await _ai.AskAsync(systemPrompt, question);
         }
     }
+
 
 }

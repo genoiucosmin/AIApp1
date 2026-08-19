@@ -1,0 +1,106 @@
+﻿What is new in this version:
+	Replace keyword matching with:
+		Generate embedding for each document chunk
+		Generate embedding for the user question
+			Compute cosine similarity
+				Select top N chunks
+		Send those to the LLM
+
+This is the foundation of:
+	RAG systems
+	Internal knowledge bots
+	Enterprise copilots
+	Legal AI search
+	Medical AI systems
+You just built a minimal RAG engine.
+
+
+How to test?
+Run Swagger.
+
+Ask: How does authentication work?
+It should: Embed question
+Compare to chunk embeddings
+Select most semantically similar chunks
+Answer correctly
+
+Now test something phrased differently:
+How do users log into the system?
+
+Keyword matching might fail.
+Semantic search should still find Auth.txt.
+
+
+More in depth:
+Step 1 — Embed all document chunks
+SO instead of Auth.txt: "Authentication is handled using JWT tokens" we have 
+
+Auth.txt:
+Content: ...
+Vector: [0.0123, -0.3345, ...]
+so we created a semantic index of your documents.
+
+Step 2 — Embed the question
+"How do users log into the system?" and we get another vector [0.0109, -0.3201, ...]
+
+Now we have:
+  Vector for each chunk
+  Vector for the question
+
+Why cosine?
+Because:
+  We care about direction, not magnitude
+  Magnitude is influenced by text length
+  Direction captures semantic meaning
+
+Why this works better than keyword matching
+	Old method:
+	Count how many question words appear in the chunk
+		Fails if wording changes
+	Example:
+		Chunk:
+		Authentication uses JWT tokens.
+
+
+Question: How do users log in?
+Keyword match?
+  “log” not in chunk
+  “login” not in chunk
+
+Fails
+
+Embedding method?
+The model knows:
+	login ≈ authentication
+	user login ≈ token based auth
+
+Vectors will be close.
+So this is semantic similarity, not string matching.
+
+That’s the big jump.
+-------------------
+What is new in this version:
+	Next small step: Chunking + relevance filtering (RAG-lite)
+	What we’re adding (conceptually)
+		Previously:
+			We send all documents to the LLM ❌
+		Next step:
+			Split docs into chunks
+			Pick only relevant chunks based on the question (we count how many words from the question appear in each chunk, order by descending number)
+			Send only those to the LLM ✅
+
+This is exactly how real RAG systems start. A RAG (Retrieval-Augmented Generation) system is an AI framework that enhances Large Language Models (LLMs) by connecting them to external knowledge bases, allowing them to retrieve relevant, up-to-date, or domain-specific information before generating an answer, leading to more factual, context-aware, and less hallucinatory responses than purely generative models.
+
+------------------------
+What this contains:
+  - LLM
+  - Prompting
+  - Guarding
+
+  LLM Integration is:
+   - call OpenAI from .Net
+Prompt Engineering is:
+- defined a system prompt to constrain the model's behavior
+Grounding is
+- forced the model to answer only from provided documents
+- verified it fails gracefully when info is missing.
