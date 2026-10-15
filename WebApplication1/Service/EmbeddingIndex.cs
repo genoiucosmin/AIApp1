@@ -36,27 +36,31 @@ namespace WebApplication1.Service
             }
         }
 
-        public async Task<IReadOnlyList<EmbeddedChunk>> SearchAsync(string question, int top = 3)
+
+        public async Task<IReadOnlyList<EmbeddedChunk>> SearchAsync(
+            string question,
+            int top = 3)
         {
-            //we build embeddings for the documents if we haven't done so yet
             if (_index == null)
                 await BuildAsync();
 
-            //we build an ebedding for the question 
             var queryVector = await _embedder.CreateEmbeddingAsync(question);
 
-            //we compare to the document embeddings (each chuck has its own vector) with the question embedding to find the most relevant chunks
+            const float minimumSimilarity = 0.35f;
+
             return _index!
                 .Select(c => new
                 {
                     Chunk = c,
                     Score = VectorMath.CosineSimilarity(queryVector, c.Vector)
                 })
+                .Where(x => x.Score >= minimumSimilarity)
                 .OrderByDescending(x => x.Score)
                 .Take(top)
                 .Select(x => x.Chunk)
                 .ToList();
         }
+
     }
 
 }
